@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="margin:0 auto;padding:50px;">
+        <div style="margin:0 auto;padding:50px;width:80%">
             <Row :gutter="32">
                 <Col span="12">
                 <h1 style="margin-left:16px;">
@@ -28,7 +28,7 @@
             <Row style="padding:20px;" :gutter="10">
                 <Col span="24">
                 建表语句
-                <div v-for="(item, index) in ddlList" :key="index" style="margin-top:10px">
+                <div v-for="(item, index) in ddlList" :key="index" style="margin-top:0px">
                     <div style="position: relative;left: -10px;top: 12px;z-index:1000">
                         <Poptip transfer confirm title="确认删除?" @on-ok="removeDdl(index)">
                             <Icon type="md-close-circle" size="20" color="red" />
@@ -87,12 +87,12 @@ export default {
             ddlList: [
                 {
                     val: `CREATE TABLE t_user (
-          id bigint(20) NOT NULL AUTO_INCREMENT,
-          name varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '作者姓名',
-          create_time datetime DEFAULT NULL COMMENT '创建日期',
-          update_time datetime DEFAULT NULL COMMENT '修改日期',
-          PRIMARY KEY (id)
-        ) ENGINE = InnoDB AUTO_INCREMENT = 2529 CHARSET = utf8 COLLATE utf8_unicode_ci;`,
+        id bigint(20) NOT NULL AUTO_INCREMENT,
+        name varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '作者姓名',
+        create_time datetime DEFAULT NULL COMMENT '创建日期',
+        update_time datetime DEFAULT NULL COMMENT '修改日期',
+        PRIMARY KEY (id)
+) ENGINE = InnoDB AUTO_INCREMENT = 2529 CHARSET = utf8 COLLATE utf8_unicode_ci;`,
                 },
             ],
             zipName: '',
