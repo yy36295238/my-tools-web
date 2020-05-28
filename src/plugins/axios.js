@@ -2,7 +2,9 @@
 
 import Vue from "vue";
 import axios from "axios";
-import { Notice } from "iview";
+import {
+  Notice
+} from "iview";
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -18,11 +20,11 @@ let config = {
 const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
-  function(config) {
+  function (config) {
     // Do something before request is sent
     return config;
   },
-  function(error) {
+  function (error) {
     // Do something with request error
     return Promise.reject(error);
   }
@@ -30,7 +32,11 @@ _axios.interceptors.request.use(
 
 // Add a response interceptor
 _axios.interceptors.response.use(
-  function(response) {
+  function (response) {
+    const headers = response.headers;
+    if (headers["content-type"] === "application/octet-stream") {
+      return response;
+    }
     if (response.data.code != 200) {
       Notice.error({
         title: response.data.message
@@ -39,13 +45,13 @@ _axios.interceptors.response.use(
     }
     return response;
   },
-  function(error) {
+  function (error) {
     // Do something with response error
     return Promise.reject(error);
   }
 );
 
-Plugin.install = function(Vue) {
+Plugin.install = function (Vue) {
   Vue.axios = _axios;
   window.axios = _axios;
   Object.defineProperties(Vue.prototype, {
