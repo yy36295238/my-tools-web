@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import hljs from 'highlight.js'; //导入代码高亮文件
-import 'highlight.js/styles/tomorrow.css'; //导入代码高亮样式,tomorrow,dracula,zenburn,androidstudio,rainbow
+import 'highlight.js/styles/atom-one-light.css'; //导入代码高亮样式,tomorrow,dracula,zenburn,androidstudio,rainbow,atom-one-light
 
 Vue.use(hljs);
 

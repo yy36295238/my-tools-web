@@ -53,12 +53,12 @@
                 </Col>
                 <Col span="20">
                 <div v-highlight v-for="(item, index) in dataList" :key="index">
-                    <h1 :id="item.className"> {{ item.className }} &nbsp;&nbsp;&nbsp;&nbsp;
-                        <Icon style="cursor:pointer" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
+                    <h1 style="z-index:99999" :id="item.className"> {{ item.className }}
+                        <Icon style="cursor:pointer;" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
                     </h1>
-                    <div style="margin-top:-50px;margin-left:-32px">
+                    <div style="margin-top:-20px;margin-left:0px">
                         <pre>
-                        <code class="css"><!-- 声明什么类型的代码 -->
+                        <code class="java"><!-- 声明什么类型的代码 -->
                             <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
                         </code>
                         </pre>
@@ -78,7 +78,6 @@ export default {
     data() {
         return {
             isDownload: false,
-            url: 'http://localhost:7070',
             dataList: [],
             author: 'tom',
             packages: 'com.company.example',
@@ -110,7 +109,7 @@ export default {
         },
         gen() {
             this.dataList = [];
-            this.axios.post(this.url + '/database/gen', this.param()).then((res) => {
+            this.axios.post('/database/gen', this.param()).then((res) => {
                 this.isDownload = true;
                 this.dataList = res.data.data.classInfoList;
                 this.zipName = res.data.data.zipName;
@@ -118,7 +117,7 @@ export default {
         },
         download() {
             this.axios
-                .post(this.url + '/database/download', this.param(), {
+                .post('/database/download', this.param(), {
                     responseType: 'blob',
                 })
                 .then((res) => {
