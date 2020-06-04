@@ -3,16 +3,23 @@
         <div style="margin:0 auto;padding:50px;width:80%">
             <Row :gutter="32">
                 <Col span="12">
-                <h1 class="left20">
+                <h1>
                     代码生成
                 </h1>
                 </Col>
                 <Col span="12" style="text-align:right">
-                <Button style="width:100px;margin-right:16px;" type="dashed" to="/">返回</Button>
+                <Button class="width100" type="dashed" to="/">返回</Button>
                 </Col>
             </Row>
-            <Tabs value="config" class="padding20">
-                <TabPane label="代码配置" name="config" class="padding20">
+            <div>
+                <div class="top20">
+                    <RadioGroup v-model="showType" type="button">
+                        <Radio label="Config"></Radio>
+                        <Radio label="ResponseResult"></Radio>
+                    </RadioGroup>
+                </div>
+
+                <div v-show="showType=='Config'">
                     <Row :gutter="32" class="top20">
                         <Col span="8">
                         作者
@@ -71,8 +78,8 @@
                         </div>
                         </Col>
                     </Row>
-                </TabPane>
-                <TabPane label="ResponseEnum" name="ResponseEnum" class="padding20">
+                </div>
+                <div v-show="showType=='ResponseResult'">
                     <!-- 左侧目录 -->
                     <Row :gutter="16" class="top20">
                         <Col span="4">
@@ -87,18 +94,16 @@
                             </h1>
                             <div>
                                 <pre>
-                                    <code class="java"><!-- 声明什么类型的代码 -->
-                                        <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
-                                    </code>
-                                </pre>
+                                <code class="java"><!-- 声明什么类型的代码 -->
+                                    <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
+                                </code>
+                            </pre>
                             </div>
                         </div>
                         </Col>
                     </Row>
-
-                </TabPane>
-            </Tabs>
-
+                </div>
+            </div>
         </div>
         <BackTop> </BackTop>
     </div>
@@ -110,6 +115,7 @@ export default {
     components: {},
     data() {
         return {
+            showType: "Config",
             isDownload: false,
             dataList: [],
             resDataList: this.resList(),
