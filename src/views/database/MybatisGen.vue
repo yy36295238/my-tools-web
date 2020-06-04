@@ -3,7 +3,7 @@
         <div style="margin:0 auto;padding:50px;width:80%">
             <Row :gutter="32">
                 <Col span="12">
-                <h1 style="margin-left:16px;">
+                <h1 class="left20">
                     代码生成
                 </h1>
                 </Col>
@@ -11,61 +11,94 @@
                 <Button style="width:100px;margin-right:16px;" type="dashed" to="/">返回</Button>
                 </Col>
             </Row>
-            <Row :gutter="32" style="padding:20px;margin-top:20px;">
-                <Col span="8">
-                作者
-                <Input type="text" size="large" v-model="author" placeholder="author" clearable />
-                </Col>
-                <Col span="8">
-                包名
-                <Input type="text" v-model="packages" size="large" placeholder="package" clearable />
-                </Col>
-                <Col span="8">
-                表前缀
-                <Input type="text" v-model="prefix" size="large" placeholder="prefix" clearable />
-                </Col>
-            </Row>
-            <Row style="padding:20px;" :gutter="10">
-                <Col span="24">
-                建表语句
-                <div v-for="(item, index) in ddlList" :key="index" style="margin-top:0px">
-                    <div style="position: relative;left: -10px;top: 12px;z-index:1000">
-                        <Poptip transfer confirm title="确认删除?" @on-ok="removeDdl(index)">
-                            <Icon type="md-close-circle" size="20" color="red" />
-                        </Poptip>
-                    </div>
-                    <Input v-model="item.val" type="textarea" :autosize="{ minRows: 8, maxRows: 50 }" placeholder="ddl" clearable />
-                </div>
-                </Col>
-            </Row>
-            <Button style="margin-left:20px;width:100px;" type="success" @click="addDdl()">添加</Button>
-            <Button style="margin-left:20px;width:100px;" type="primary" @click="gen">生成</Button>
-            <Button v-show="isDownload" style="margin-left:20px;width:100px;" type="dashed" @click="download">下载</Button>
+            <Tabs value="config" class="padding20">
+                <TabPane label="代码配置" name="config" class="padding20">
+                    <Row :gutter="32" class="top20">
+                        <Col span="8">
+                        作者
+                        <Input type="text" size="large" v-model="author" placeholder="author" clearable />
+                        </Col>
+                        <Col span="8">
+                        包名
+                        <Input type="text" v-model="packages" size="large" placeholder="package" clearable />
+                        </Col>
+                        <Col span="8">
+                        表前缀
+                        <Input type="text" v-model="prefix" size="large" placeholder="prefix" clearable />
+                        </Col>
+                    </Row>
+                    <Row class="top20" :gutter="10">
+                        <Col span="24">
+                        建表语句
+                        <div v-for="(item, index) in ddlList" :key="index" style="margin-top:0px">
+                            <div style="position: relative;left: -10px;top: 12px;z-index:1000">
+                                <Poptip transfer confirm title="确认删除?" @on-ok="removeDdl(index)">
+                                    <Icon type="md-close-circle" size="20" color="red" />
+                                </Poptip>
+                            </div>
+                            <Input v-model="item.val" type="textarea" :autosize="{ minRows: 8, maxRows: 50 }" placeholder="ddl" clearable />
+                        </div>
+                        </Col>
+                    </Row>
 
-            <Divider dashed />
-
-            <!-- 左侧目录 -->
-            <Row :gutter="16" style="padding:20px;margin-top:20px;">
-                <Col span="4">
-                <Anchor show-ink :offset-top="20">
-                    <AnchorLink :scroll-offset="-500" v-for="(item, index) in dataList" :key="index" :href="'#' + item.className" :title="item.className" />
-                </Anchor>
-                </Col>
-                <Col span="20">
-                <div v-highlight v-for="(item, index) in dataList" :key="index">
-                    <h1 style="z-index:99999" :id="item.className"> {{ item.className }}
-                        <Icon style="cursor:pointer;" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
-                    </h1>
-                    <div style="margin-top:-20px;margin-left:0px">
-                        <pre>
-                        <code class="java"><!-- 声明什么类型的代码 -->
-                            <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
-                        </code>
-                        </pre>
+                    <div class="top20">
+                        <Button class="width100" type="success" @click="addDdl()">添加</Button>
+                        <Button class="width100 left10" type="primary" @click="gen">生成</Button>
+                        <Button class="width100 left10" type="dashed" @click="download">下载</Button>
                     </div>
-                </div>
-                </Col>
-            </Row>
+
+                    <Divider dashed />
+
+                    <!-- 左侧目录 -->
+                    <Row :gutter="16" class="top20">
+                        <Col span="4">
+                        <Anchor show-ink :offset-top="20">
+                            <AnchorLink :scroll-offset="-500" v-for="(item, index) in dataList" :key="index" :href="'#' + item.className" :title="item.className" />
+                        </Anchor>
+                        </Col>
+                        <Col span="20">
+                        <div v-highlight v-for="(item, index) in dataList" :key="index">
+                            <h1 :id="item.className"> {{ item.className }}
+                                <Icon style="cursor:pointer;" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
+                            </h1>
+                            <div style="margin-top:-20px;margin-left:0px">
+                                <pre>
+                                    <code class="java"><!-- 声明什么类型的代码 -->
+                                        <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
+                                    </code>
+                                </pre>
+                            </div>
+                        </div>
+                        </Col>
+                    </Row>
+                </TabPane>
+                <TabPane label="ResponseEnum" name="ResponseEnum" class="padding20">
+                    <!-- 左侧目录 -->
+                    <Row :gutter="16" class="top20">
+                        <Col span="4">
+                        <Anchor show-ink :offset-top="20">
+                            <AnchorLink :scroll-offset="0" v-for="(item, index) in resDataList" :key="index" :href="'#' + item.className" :title="item.className" />
+                        </Anchor>
+                        </Col>
+                        <Col span="20">
+                        <div v-highlight v-for="(item, index) in resDataList" :key="index">
+                            <h1 :id="item.className"> {{ item.className }}
+                                <Icon style="cursor:pointer;" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
+                            </h1>
+                            <div>
+                                <pre>
+                                    <code class="java"><!-- 声明什么类型的代码 -->
+                                        <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
+                                    </code>
+                                </pre>
+                            </div>
+                        </div>
+                        </Col>
+                    </Row>
+
+                </TabPane>
+            </Tabs>
+
         </div>
         <BackTop> </BackTop>
     </div>
@@ -79,6 +112,7 @@ export default {
         return {
             isDownload: false,
             dataList: [],
+            resDataList: this.resList(),
             author: 'tom',
             packages: 'com.company.example',
             prefix: 't_',
@@ -147,6 +181,104 @@ export default {
             console.log('clicp');
             this.$Message.success('复制成功');
         },
+        resList() {
+            return [
+                { "className": "ResponseResult", "classInfo": ResponseResult },
+                { "className": "ResultEnum", "classInfo": ResultEnum },
+            ]
+        }
     },
 };
+
+const ResponseResult = `package com.yyself.tool.utils;
+
+
+import com.yyself.tool.common.ResultEnum;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * @author yangyu
+ */
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResponseResult {
+
+    private Integer code;
+    private String message;
+    private Object data;
+    private Long cost;
+
+
+    public static ResponseResult ok(Object data) {
+        return new ResponseResult().success(data);
+    }
+
+    public static ResponseResult ok() {
+        return new ResponseResult().success();
+    }
+
+    public static ResponseResult err(ResultEnum resultEnum) {
+        return new ResponseResult().error(resultEnum);
+    }
+
+    public static ResponseResult err(ResultEnum resultEnum, String msg) {
+        return new ResponseResult(resultEnum.code, resultEnum.message + msg);
+    }
+
+    public ResponseResult success(Object data) {
+        this.code = ResultEnum.SUCCESS.code;
+        this.message = ResultEnum.SUCCESS.message;
+        this.data = data;
+        return this;
+    }
+
+    public ResponseResult error(ResultEnum resultEnum) {
+        this.code = resultEnum.code;
+        this.message = resultEnum.message;
+        return this;
+    }
+
+    public ResponseResult success() {
+        this.success(null);
+        return this;
+    }
+
+    public ResponseResult(ResultEnum resultEnum) {
+        this.code = resultEnum.code;
+        this.message = resultEnum.message;
+    }
+
+    public ResponseResult(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+}
+`;
+
+const ResultEnum = `package com.yyself.tool.common;
+
+/**
+ * @author YangYu
+ */
+
+public enum ResultEnum {
+    //结果枚举值
+    SUCCESS(200, "成功"),
+
+    SYS_ERR(500, "系统错误");
+
+    public Integer code;
+    public String message;
+
+    ResultEnum(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+}
+`;
+
 </script>
