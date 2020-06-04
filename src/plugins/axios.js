@@ -11,7 +11,7 @@ import { Notice } from 'iview';
 
 let config = {
   // baseURL: 'http://localhost:7070',
-  baseURL: 'http://www.yyself:9999',
+  baseURL: 'http://www.yyself.com:9999',
   timeout: 10 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };
