@@ -51,7 +51,7 @@
                     <div class="top20">
                         <Button class="width100" type="success" @click="addDdl()">添加</Button>
                         <Button class="width100 left10" type="primary" @click="gen">生成</Button>
-                        <Button class="width100 left10" type="dashed" @click="download">下载</Button>
+                        <Button class="width100 left10" type="dashed" @click="download" v-show="isDownload">下载</Button>
                     </div>
 
                     <Divider dashed />
