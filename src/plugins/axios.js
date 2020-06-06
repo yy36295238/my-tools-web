@@ -10,8 +10,8 @@ import { Notice } from 'iview';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  baseURL: 'http://localhost:9999',
-  // baseURL: 'http://www.yyself.com:9999',
+  // baseURL: 'http://localhost:9999',
+  baseURL: 'http://www.yyself.com:9999',
   timeout: 10 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };
