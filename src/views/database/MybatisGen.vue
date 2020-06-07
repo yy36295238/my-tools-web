@@ -1,108 +1,126 @@
+<style scoped>
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+}
+.hljs {
+    display: inline;
+    overflow-x: auto;
+    padding: 0px;
+    color: #383a42;
+    background: #ffffff;
+}
+</style>
 <template>
-    <div>
-        <div style="margin:0 auto;padding:50px;width:80%">
-            <Row :gutter="32">
-                <Col span="12">
-                <h1>
-                    代码生成
-                </h1>
-                </Col>
-                <Col span="12" style="text-align:right">
-                <Button class="width100" type="dashed" to="/">返回</Button>
-                </Col>
-            </Row>
-            <div>
+    <div class="content">
+        <Row :gutter="32">
+            <Col span="12">
+            <h1>
+                代码生成
+            </h1>
+            </Col>
+            <Col span="12" style="text-align:right">
+            <Button class="width100" type="dashed" to="/">返回</Button>
+            </Col>
+        </Row>
+        <Divider dashed />
+        <div>
+            <div class="top20">
+                <RadioGroup v-model="showType" type="button">
+                    <Radio label="Config"></Radio>
+                    <Radio label="ResponseResult"></Radio>
+                </RadioGroup>
+            </div>
+
+            <div v-show="showType=='Config'">
+                <Row :gutter="32" class="top20">
+                    <Col span="8">
+                    作者
+                    <Input type="text" size="large" v-model="author" placeholder="author" clearable />
+                    </Col>
+                    <Col span="8">
+                    包名
+                    <Input type="text" v-model="packages" size="large" placeholder="package" clearable />
+                    </Col>
+                    <Col span="8">
+                    表前缀
+                    <Input type="text" v-model="prefix" size="large" placeholder="prefix" clearable />
+                    </Col>
+                </Row>
+                <Row class="top20" :gutter="10">
+                    <Col span="24">
+                    建表语句
+                    <div v-for="(item, index) in ddlList" :key="index" style="margin-top:0px">
+                        <div class="floatLeftTop circle shadow pointer">
+                            <Poptip transfer confirm title="确认删除?" @on-ok="removeDdl(index)">
+                                <Icon type="md-close-circle" size="20" color="red" />
+                            </Poptip>
+                        </div>
+                        <Input v-model="item.val" type="textarea" :autosize="{ minRows: 8, maxRows: 50 }" placeholder="ddl" clearable />
+                    </div>
+                    </Col>
+                </Row>
+
                 <div class="top20">
-                    <RadioGroup v-model="showType" type="button">
-                        <Radio label="Config"></Radio>
-                        <Radio label="ResponseResult"></Radio>
-                    </RadioGroup>
+                    <Button class="width100" type="success" @click="addDdl()">添加</Button>
+                    <Button class="width100 left10" type="primary" @click="gen">生成</Button>
+                    <Button class="width100 left10" type="dashed" @click="download" v-show="isDownload">下载</Button>
                 </div>
 
-                <div v-show="showType=='Config'">
-                    <Row :gutter="32" class="top20">
-                        <Col span="8">
-                        作者
-                        <Input type="text" size="large" v-model="author" placeholder="author" clearable />
-                        </Col>
-                        <Col span="8">
-                        包名
-                        <Input type="text" v-model="packages" size="large" placeholder="package" clearable />
-                        </Col>
-                        <Col span="8">
-                        表前缀
-                        <Input type="text" v-model="prefix" size="large" placeholder="prefix" clearable />
-                        </Col>
-                    </Row>
-                    <Row class="top20" :gutter="10">
-                        <Col span="24">
-                        建表语句
-                        <div v-for="(item, index) in ddlList" :key="index" style="margin-top:0px">
-                            <div style="position: relative;left: -10px;top: 12px;z-index:1000">
-                                <Poptip transfer confirm title="确认删除?" @on-ok="removeDdl(index)">
-                                    <Icon type="md-close-circle" size="20" color="red" />
-                                </Poptip>
-                            </div>
-                            <Input v-model="item.val" type="textarea" :autosize="{ minRows: 8, maxRows: 50 }" placeholder="ddl" clearable />
-                        </div>
-                        </Col>
-                    </Row>
+                <Divider dashed />
 
-                    <div class="top20">
-                        <Button class="width100" type="success" @click="addDdl()">添加</Button>
-                        <Button class="width100 left10" type="primary" @click="gen">生成</Button>
-                        <Button class="width100 left10" type="dashed" @click="download" v-show="isDownload">下载</Button>
-                    </div>
-
-                    <Divider dashed />
-
-                    <!-- 左侧目录 -->
-                    <Row :gutter="16" class="top20">
-                        <Col span="4">
-                        <Anchor show-ink :offset-top="20">
-                            <AnchorLink :scroll-offset="-500" v-for="(item, index) in dataList" :key="index" :href="'#' + item.className" :title="item.className" />
-                        </Anchor>
-                        </Col>
-                        <Col span="20">
-                        <div v-highlight v-for="(item, index) in dataList" :key="index">
-                            <h1 :id="item.className"> {{ item.className }}
-                                <Icon style="cursor:pointer;" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
-                            </h1>
-                            <div style="margin-top:-20px;margin-left:0px">
-                                <pre>
-                                    <code class="java"><!-- 声明什么类型的代码 -->
-                                        <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
+                <!-- 左侧目录 -->
+                <Row :gutter="16" class="top20">
+                    <Col span="4">
+                    <Anchor show-ink :offset-top="20">
+                        <AnchorLink :scroll-offset="-500" v-for="(item, index) in dataList" :key="index" :href="'#' + item.className" :title="item.className" />
+                    </Anchor>
+                    </Col>
+                    <Col span="20">
+                    <div v-highlight v-for="(item, index) in dataList" :key="index">
+                        <h1 :id="item.className"> {{ item.className }}
+                            <Icon class="pointer" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
+                        </h1>
+                        <div style="margin-top:-20px;margin-left:0px">
+                            <pre>
+                                    <code :class="codeStyle(item.lang)"><!-- 声明什么类型的代码 -->
+                                        <div>{{item.classInfo}}</div>
                                     </code>
                                 </pre>
-                            </div>
                         </div>
-                        </Col>
-                    </Row>
-                </div>
-                <div v-show="showType=='ResponseResult'">
-                    <!-- 左侧目录 -->
-                    <Row :gutter="16" class="top20">
-                        <Col span="4">
-                        <Anchor show-ink :offset-top="20">
-                            <AnchorLink :scroll-offset="0" v-for="(item, index) in resDataList" :key="index" :href="'#' + item.className" :title="item.className" />
-                        </Anchor>
-                        </Col>
-                        <Col span="20">
-                        <div v-highlight v-for="(item, index) in resDataList" :key="index">
-                            <h1 :id="item.className"> {{ item.className }}
-                                <Icon style="cursor:pointer;" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
-                            </h1>
-                            <div>
-                                <pre>
+                    </div>
+                    </Col>
+                </Row>
+            </div>
+            <div v-show="showType=='ResponseResult'">
+                <!-- 左侧目录 -->
+                <Row :gutter="16" class="top20">
+                    <Col span="4">
+                    <Anchor show-ink :offset-top="20">
+                        <AnchorLink :scroll-offset="0" v-for="(item, index) in resDataList" :key="index" :href="'#' + item.className" :title="item.className" />
+                    </Anchor>
+                    </Col>
+                    <Col span="20">
+                    <div v-highlight v-for="(item, index) in resDataList" :key="index">
+                        <h1 :id="item.className"> {{ item.className }}
+                            <Icon style="cursor:pointer;" type="md-copy" color="#c5c8ce" @click="copy(item.classInfo, $event)" title="复制" />
+                        </h1>
+                        <div>
+                            <pre>
                                 <code class="java"><!-- 声明什么类型的代码 -->
-                                    <div style="padding-left:25px" contenteditable="false" :autosize="true" >{{item.classInfo}}</div>
+                                    <div>{{item.classInfo}}</div>
                                 </code>
                             </pre>
-                            </div>
                         </div>
-                        </Col>
-                    </Row>
-                </div>
+                    </div>
+                    </Col>
+                </Row>
             </div>
         </div>
         <BackTop> </BackTop>
@@ -139,7 +157,11 @@ export default {
     },
     mounted() { },
     methods: {
+        codeStyle(lang) {
+            return lang == "vue" ? "xml" : "java";
+        },
         addDdl() {
+            let uuid = this.tools.uuid()
             this.ddlList.push({
                 val: '',
             });

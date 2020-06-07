@@ -49,15 +49,15 @@
                 </div>
             </Card>
             </Col>
-            <!-- <Col span="6">
-            <Card :padding="4" :bordered="false" class="card" to="/mybatisGen">
+            <Col span="6">
+            <Card :padding="4" :bordered="false" class="card" to="#">
                 <div>
-                    <div class="header cl1">
-                        <a style="text-decoration:none;font-size: 24px;color: #fff;">Kot-代码生成器</a>
+                    <div class="header cl3" @click="later()">
+                        <a style="text-decoration:none;font-size: 24px;color: #fff;">数据库字典</a>
                     </div>
                 </div>
             </Card>
-            </Col> -->
+            </Col>
         </Row>
     </div>
 </template>
@@ -70,7 +70,12 @@ export default {
     },
     mounted() { },
     methods: {
-        refresh() { }
+        later() {
+            this.$Message.warning({
+                background: true,
+                content: "敬请期待"
+            });
+        }
     }
 };
 </script>

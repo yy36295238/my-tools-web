@@ -9,6 +9,10 @@ import axios from 'axios';
 
 import '@/assets/css/global.css';
 
+import tools from '@/utils/tools.js';
+
+Vue.prototype.tools = tools;
+
 Vue.config.productionTip = false;
 
 function createdVue() {

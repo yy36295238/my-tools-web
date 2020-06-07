@@ -1,3 +1,7 @@
+.pointer {
+    cursor: pointer;
+}
+
 .top5 {
     margin-top: 5px;
 }
@@ -11,6 +15,14 @@
 }
 
 .top30 {
+    margin-top: 30px;
+}
+
+.top40 {
+    margin-top: 30px;
+}
+
+.top50 {
     margin-top: 30px;
 }
 
@@ -44,4 +56,36 @@
 
 .width100 {
     width: 100px;
+}
+
+/** 背景阴影 */
+.shadow {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: all 0.25s;
+}
+
+/** 正文居中 */
+.content {
+    margin: 0 auto;
+    padding: 100px;
+    width: 90%;
+    height: 100%;
+    background: #ffffff;
+}
+
+/**左上角悬浮*/
+.floatLeftTop {
+    position: relative;
+    left: -10px;
+    top: 8px;
+    z-index: 1000
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
 }
