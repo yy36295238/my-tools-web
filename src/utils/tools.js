@@ -92,4 +92,24 @@ export default class tools {
     var uuid = s.join('');
     return uuid;
   }
+
+  /**
+   * JSON排序
+   * @param {} json
+   */
+  static jsonSort(json) {
+    let arr = [];
+    let newJson = {};
+    for (var key in json) {
+      arr.push(key);
+    }
+    arr.sort();
+    let str = '';
+    for (var i in arr) {
+      var key = arr[i];
+      var val = json[key];
+      newJson[key] = json[key];
+    }
+    return newJson;
+  }
 }
