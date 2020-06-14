@@ -32,4 +32,5 @@ axios.get(path).then((res) => {
   console.log('config:', res.data);
   axios.defaults.baseURL = res.data.baseURL;
   createdVue();
+  Vue.prototype.baseURL = res.data.baseURL;
 });

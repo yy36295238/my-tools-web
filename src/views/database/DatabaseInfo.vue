@@ -15,7 +15,7 @@
         <Divider dashed />
         <div>
             <div>
-                <Upload multiple type="drag" action="http://localhost:9999/database/info" :show-upload-list="false" :on-success="handleSuccess">
+                <Upload multiple type="drag" :action="uploadUrl" :show-upload-list="false" :on-success="handleSuccess">
                     <div style="padding: 30px 0">
                         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                         <p>点击或拖拽上传SQL文件</p>
@@ -70,6 +70,7 @@ export default {
     components: {},
     data() {
         return {
+            uploadUrl: this.baseURL + "/database/info",
             host: "localhost",
             port: "3306",
             database: "user",
