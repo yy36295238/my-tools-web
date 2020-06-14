@@ -54,12 +54,29 @@
     margin-left: 30px;
 }
 
+.right10 {
+    margin-right: 10px;
+}
+
+.right20 {
+    margin-right: 20px;
+}
+
+.right30 {
+    margin-right: 30px;
+}
+
 .width100 {
     width: 100px;
 }
 
 /** 背景阴影 */
 .shadow {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: all 0.25s;
+}
+
+.shadow-hover:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     transition: all 0.25s;
 }
@@ -81,6 +98,7 @@
     z-index: 1000
 }
 
+/**原型*/
 .circle {
     width: 20px;
     height: 20px;
@@ -88,4 +106,9 @@
     -moz-border-radius: 60px;
     -webkit-border-radius: 60px;
     border-radius: 60px;
+}
+
+/**边框虚线*/
+.dashed-border {
+    border: 1px dashed #e8eaec;
 }

@@ -1,29 +1,36 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-const routes = [{
-    path: "/",
-    name: "Home",
-    component: function () {
-      return import("@/views/Home.vue");
-    }
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: function() {
+      return import('@/views/Home.vue');
+    },
   },
   {
-    path: "/mybatisGen",
-    name: "MybatisGen",
-    component: function () {
-      return import("@/views/database/MybatisGen.vue");
-    }
+    path: '/mybatisGen',
+    name: 'MybatisGen',
+    component: function() {
+      return import('@/views/database/MybatisGen.vue');
+    },
   },
-
+  {
+    path: '/databaseInfo',
+    name: 'DatabaseInfo',
+    component: function() {
+      return import('@/views/database/DatabaseInfo.vue');
+    },
+  },
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 export default router;

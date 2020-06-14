@@ -50,7 +50,7 @@
             </Card>
             </Col>
             <Col span="6">
-            <Card :padding="4" :bordered="false" class="card" to="#">
+            <Card :padding="4" :bordered="false" class="card" to="/databaseInfo">
                 <div>
                     <div class="header cl3" @click="later()">
                         <a style="text-decoration:none;font-size: 24px;color: #fff;">数据库字典</a>
@@ -71,10 +71,10 @@ export default {
     mounted() { },
     methods: {
         later() {
-            this.$Message.warning({
-                background: true,
-                content: "敬请期待"
-            });
+            // this.$Message.warning({
+            //     background: true,
+            //     content: "敬请期待"
+            // });
         }
     }
 };
