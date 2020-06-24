@@ -23,6 +23,7 @@ _axios.interceptors.request.use(
     return config;
   },
   function(error) {
+    console.error('request error', error);
     return Promise.reject(error);
   }
 );
@@ -43,6 +44,7 @@ _axios.interceptors.response.use(
     return response;
   },
   function(error) {
+    console.error('response error', error);
     Notice.error({
       title: '服务不可用',
     });

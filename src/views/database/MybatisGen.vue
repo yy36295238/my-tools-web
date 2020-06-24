@@ -79,7 +79,10 @@ pre {
                 <Row :gutter="16" class="top20">
                     <Col span="4">
                     <Anchor show-ink :offset-top="20">
-                        <AnchorLink :scroll-offset="-500" v-for="(item, index) in dataList" :key="index" :href="'#' + item.className" :title="item.className" />
+                        <AnchorLink :scroll-offset="-800" v-for="(value,key,index) in resData.classModelMap" :key="index" :href="'#L1' + key" :title="key">
+                            <AnchorLink :scroll-offset="-800" v-for="(item, index) in value" :key="index" :href="'#' + item.className" :title="item.className">
+                            </AnchorLink>
+                        </AnchorLink>
                     </Anchor>
                     </Col>
                     <Col span="20">
@@ -103,7 +106,8 @@ pre {
                 <Row :gutter="16" class="top20">
                     <Col span="4">
                     <Anchor show-ink :offset-top="20">
-                        <AnchorLink :scroll-offset="0" v-for="(item, index) in resDataList" :key="index" :href="'#' + item.className" :title="item.className" />
+                        <AnchorLink :scroll-offset="0" v-for="(item, index) in resDataList" :key="index" :href="'#' + item.className" :title="item.className">
+                        </AnchorLink>
                     </Anchor>
                     </Col>
                     <Col span="20">
@@ -135,15 +139,25 @@ export default {
         return {
             showType: "Config",
             isDownload: false,
+            resData: {},
             dataList: [],
             resDataList: this.resList(),
             author: 'tom',
             packages: 'com.company.example',
             prefix: 't_',
-            enableSwagger: true,
+            enableSwagger: false,
             ddlList: [
                 {
                     val: `CREATE TABLE t_user (
+        id bigint(20) NOT NULL AUTO_INCREMENT,
+        name varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '作者姓名',
+        create_time datetime DEFAULT NULL COMMENT '创建日期',
+        update_time datetime DEFAULT NULL COMMENT '修改日期',
+        PRIMARY KEY (id)
+) ENGINE = InnoDB AUTO_INCREMENT = 2529 CHARSET = utf8 COLLATE utf8_unicode_ci;`,
+                },
+                {
+                    val: `CREATE TABLE t_role (
         id bigint(20) NOT NULL AUTO_INCREMENT,
         name varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '作者姓名',
         create_time datetime DEFAULT NULL COMMENT '创建日期',
@@ -173,6 +187,7 @@ export default {
             this.dataList = [];
             this.axios.post('/database/gen', this.param()).then((res) => {
                 this.isDownload = true;
+                this.resData = res.data.data;
                 this.dataList = res.data.data.classInfoList;
                 this.zipName = res.data.data.zipName;
             });
@@ -198,7 +213,7 @@ export default {
                 ddlList: this.ddlList.map((item) => {
                     return item.val;
                 }),
-                enableSwagger: true,
+                enableSwagger: this.enableSwagger,
                 packages: this.packages,
                 prefix: this.prefix,
                 zipName: this.zipName,
