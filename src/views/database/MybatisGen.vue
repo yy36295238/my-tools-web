@@ -31,12 +31,20 @@ pre {
         </Row>
         <Divider dashed />
         <div>
-            <div class="top20">
+            <Row :gutter="20">
+                <Col span="4">
+                <RadioGroup v-model="dialect" type="button" @on-change="databaseTypeChange">
+                    <Radio label="MySQL"></Radio>
+                    <Radio label="PostgreSQL"></Radio>
+                </RadioGroup>
+                </Col>
+                <Col span="12">
                 <RadioGroup v-model="showType" type="button">
                     <Radio label="Config"></Radio>
                     <Radio label="ResponseResult"></Radio>
                 </RadioGroup>
-            </div>
+                </Col>
+            </Row>
 
             <div v-show="showType=='Config'">
                 <Row :gutter="32" class="top20">
@@ -62,7 +70,7 @@ pre {
                                 <Icon type="md-close-circle" size="20" color="red" />
                             </Poptip>
                         </div>
-                        <Input v-model="item.val" type="textarea" :autosize="{ minRows: 8, maxRows: 50 }" placeholder="ddl" clearable />
+                        <Input v-model="item.val" type="textarea" :autosize="{ minRows: 4, maxRows: 50 }" placeholder="ddl" clearable />
                     </div>
                     </Col>
                 </Row>
@@ -138,6 +146,7 @@ export default {
     data() {
         return {
             showType: "Config",
+            dialect: "MySQL",
             isDownload: false,
             resData: {},
             dataList: [],
@@ -147,30 +156,23 @@ export default {
             prefix: 't_',
             enableSwagger: false,
             ddlList: [
-                {
-                    val: `CREATE TABLE t_user (
-        id bigint(20) NOT NULL AUTO_INCREMENT,
-        name varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '作者姓名',
-        create_time datetime DEFAULT NULL COMMENT '创建日期',
-        update_time datetime DEFAULT NULL COMMENT '修改日期',
-        PRIMARY KEY (id)
-) ENGINE = InnoDB AUTO_INCREMENT = 2529 CHARSET = utf8 COLLATE utf8_unicode_ci;`,
-                },
-                {
-                    val: `CREATE TABLE t_role (
-        id bigint(20) NOT NULL AUTO_INCREMENT,
-        name varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '作者姓名',
-        create_time datetime DEFAULT NULL COMMENT '创建日期',
-        update_time datetime DEFAULT NULL COMMENT '修改日期',
-        PRIMARY KEY (id)
-) ENGINE = InnoDB AUTO_INCREMENT = 2529 CHARSET = utf8 COLLATE utf8_unicode_ci;`,
-                },
+                mysqlSql(),
             ],
             zipName: '',
         };
     },
     mounted() { },
     methods: {
+        databaseTypeChange(val) {
+            this.ddlList = [];
+            this.dataList = [];
+            this.resData = {};
+            if (val == "MySQL") {
+                this.ddlList.push(mysqlSql());
+            } else {
+                this.ddlList.push(postgreSql());
+            }
+        },
         codeStyle(lang) {
             return lang == "vue" ? "xml" : "java";
         },
@@ -209,6 +211,7 @@ export default {
         },
         param() {
             return {
+                dialect: this.dialect.toLowerCase(),
                 author: this.author,
                 ddlList: this.ddlList.map((item) => {
                     return item.val;
@@ -232,6 +235,53 @@ export default {
         }
     },
 };
+
+function mysqlSql() {
+    var str = "";
+    str += "CREATE TABLE `customer` (\n";
+    str += "    `id` bigint(20) NOT NULL COMMENT '主键',\n";
+    str += "    `name` varchar(255) NOT NULL COMMENT '名称',\n";
+    str += "    `amount` double DEFAULT NULL COMMENT '金额',\n";
+    str += "    `text` text COMMENT '文本',\n";
+    str += "    `status` smallint(6) NOT NULL DEFAULT '1' COMMENT '状态',\n";
+    str += "    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',\n";
+    str += "    PRIMARY KEY (`id`),\n";
+    str += "    UNIQUE KEY `unq_name` (`name`) USING BTREE COMMENT '名称唯一索引',\n";
+    str += "    KEY `idx_status` (`status`) USING BTREE COMMENT '状态索引',\n";
+    str += "    KEY `idx_name_createTime` (`name`,`create_time`) USING BTREE COMMENT '名称_时间'\n";
+    str += ") ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='客户表';";
+    return {
+        val: str
+    };
+}
+
+function postgreSql() {
+    var str = "";
+    str += "CREATE TABLE \"public\".\"t_user\" (\n";
+    str += "    \"id\" int8 NOT NULL DEFAULT nextval('t_user_id_seq'::regclass),\n";
+    str += "    \"name\" varchar(255) COLLATE \"default\" NOT NULL,\n";
+    str += "    \"age\" int4,\n";
+    str += "    \"create_time\" timestamp(6) NOT NULL,\n";
+    str += "    \"remark\" varchar(10) COLLATE \"default\",\n";
+    str += "    \"status\" int2 NOT NULL DEFAULT 1,\n";
+    str += "    \"user_id\" int4 NOT NULL\n";
+    str += ")\n";
+    str += ";\n";
+    str += "COMMENT ON COLUMN \"public\".\"t_user\".\"id\" IS '主键';\n";
+    str += "COMMENT ON COLUMN \"public\".\"t_user\".\"name\" IS '姓名';\n";
+    str += "COMMENT ON COLUMN \"public\".\"t_user\".\"age\" IS '年龄';\n";
+    str += "COMMENT ON COLUMN \"public\".\"t_user\".\"create_time\" IS '创建时间';\n";
+    str += "COMMENT ON COLUMN \"public\".\"t_user\".\"remark\" IS '备注';\n";
+    str += "COMMENT ON COLUMN \"public\".\"t_user\".\"status\" IS '状态';\n";
+    str += "COMMENT ON COLUMN \"public\".\"t_user\".\"user_id\" IS '用户ID';\n";
+    str += "COMMENT ON TABLE \"public\".\"t_user\" IS '用户表';\n";
+    str += "ALTER TABLE \"public\".\"t_user\" ADD CONSTRAINT \"uiq_user_id\" UNIQUE (\"user_id\");\n";
+    str += "ALTER TABLE \"public\".\"t_user\" ADD CONSTRAINT \"t_user_pkey\" PRIMARY KEY (\"id\");";
+    return {
+        val: str
+    };
+
+}
 
 const ResponseResult = `package com.yyself.tool.utils;
 

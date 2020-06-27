@@ -15,28 +15,22 @@
         <Divider dashed />
         <div>
             <div>
-                <Alert type="warning" show-icon>目前只支持MySQL</Alert>
-                <Upload multiple type="drag" :action="uploadUrl" :show-upload-list="false" :on-success="handleSuccess">
+                <RadioGroup v-model="dialect" type="button" @on-change="databaseTypeChange">
+                    <Radio label="MySQL"></Radio>
+                    <Radio label="PostgreSQL"></Radio>
+                </RadioGroup>
+                <Alert v-show="dialect == 'PostgreSQL'" type="warning" show-icon class="top20">
+                    索引格式
+                    <span slot="desc">
+                        CREATE INDEX "idx_name_status" ON "public"."t_user" USING btree ("name","status");
+                    </span>
+                </Alert>
+                <Upload class="top20" type="drag" :action="uploadUrl" :data="uploadData" :show-upload-list="false" :on-success="handleSuccess" :before-upload="beforeUpload">
                     <div style="padding: 30px 0">
                         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                         <p>点击或拖拽上传SQL文件</p>
                     </div>
                 </Upload>
-
-                <!-- <Row :gutter="32" class="top20">
-                    <Col span="8">
-                    地址
-                    <Input type="text" size="large" v-model="host" placeholder="host" clearable />
-                    </Col>
-                    <Col span="8">
-                    端口
-                    <Input type="text" v-model="port" size="large" placeholder="port" clearable />
-                    </Col>
-                    <Col span="8">
-                    数据库名称
-                    <Input type="text" v-model="database" size="large" placeholder="database" clearable />
-                    </Col>
-                </Row> -->
 
                 <!-- 左侧目录 -->
                 <Row :gutter="16" class="top20">
@@ -48,7 +42,7 @@
                     <Col span="20">
                     <div v-for="(item, index) in dataList" :key="index">
                         <div class="shadow-hover padding20 dashed-border top20">
-                            <h3 :id="item.tableName">{{item.tableName}}</h3>
+                            <h3 :id="item.tableName">{{tableName(item)}}</h3>
                             <Table class="top20" :columns="getColumnInfos()" :data="item.columnInfos"></Table>
                             <h3 class="top20">索引</h3>
                             <Table class="top20" :columns="getIndexInfos()" :data="item.indexInfos"></Table>
@@ -56,10 +50,6 @@
                     </div>
                     </Col>
                 </Row>
-
-                <br>
-                <br>
-
             </div>
             <BackTop> </BackTop>
         </div>
@@ -72,9 +62,8 @@ export default {
     data() {
         return {
             uploadUrl: this.baseURL + "/database/info",
-            host: "localhost",
-            port: "3306",
-            database: "user",
+            uploadData: {},
+            dialect: "MySQL",
             columnInfos: [],
             indexInfos: [],
             dataList: [],
@@ -82,29 +71,55 @@ export default {
     },
     mounted() { },
     methods: {
+        databaseTypeChange(val) {
+            this.dataList = [];
+        },
+        beforeUpload() {
+            this.dataList = [];
+            this.uploadData = {
+                dialect: this.dialect.toLowerCase()
+            }
+            let promise = new Promise((resolve) => {
+                this.$nextTick(function () {
+                    resolve(true);
+                });
+            });
+            return promise; //通过返回一个promis对象解决
+
+        },
         handleSuccess(res, file, fileList) {
+            if (res.code != 200) {
+                this.$Notice.error({
+                    title: res.message,
+                });
+                return;
+            }
             this.dataList = res.data;
+        },
+        tableName(item) {
+            return item.tableDesc ? (item.tableName + " - " + item.tableDesc) : item.tableName;
         },
         getColumnInfos() {
             return [
                 {
                     title: '名称',
                     key: 'name',
-                    width: 200,
                 },
                 {
                     title: '类型',
                     key: 'type',
-                    width: 150,
                 },
                 {
                     title: '长度',
                     key: 'length',
-                    width: 150,
                 },
                 {
-                    title: '其他',
-                    key: 'other'
+                    title: '不为空',
+                    key: 'notNull'
+                },
+                {
+                    title: '默认值',
+                    key: 'defaultVal'
                 },
                 {
                     title: '备注',
@@ -123,8 +138,16 @@ export default {
                     key: 'type'
                 },
                 {
+                    title: '索引值',
+                    key: 'using'
+                },
+                {
                     title: '索引列',
-                    key: 'content'
+                    key: 'indexes'
+                },
+                {
+                    title: '备注',
+                    key: 'comment'
                 },
             ]
         }

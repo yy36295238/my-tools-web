@@ -38,6 +38,8 @@ _axios.interceptors.response.use(
     if (response.data.code != 200) {
       Notice.error({
         title: response.data.message,
+        desc: response.data.detailMsg ? response.data.detailMsg : '',
+        duration: 10,
       });
       return Promise.reject(response.data);
     }
