@@ -38,11 +38,18 @@ pre {
                     <Radio label="PostgreSQL"></Radio>
                 </RadioGroup>
                 </Col>
-                <Col span="12">
+                <Col span="4">
                 <RadioGroup v-model="showType" type="button">
                     <Radio label="Config"></Radio>
                     <Radio label="ResponseResult"></Radio>
                 </RadioGroup>
+                </Col>
+                <Col span="4">
+                开启Swagger &nbsp;&nbsp;&nbsp;&nbsp;
+                <i-switch v-model="enableSwagger" size="large">
+                    <span slot="open">On</span>
+                    <span slot="close">Off</span>
+                </i-switch>
                 </Col>
             </Row>
 
@@ -154,7 +161,7 @@ export default {
             author: 'tom',
             packages: 'com.company.example',
             prefix: 't_',
-            enableSwagger: false,
+            enableSwagger: true,
             ddlList: [
                 mysqlSql(),
             ],
