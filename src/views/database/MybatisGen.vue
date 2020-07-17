@@ -38,7 +38,7 @@ pre {
                     <Radio label="PostgreSQL"></Radio>
                 </RadioGroup>
                 </Col>
-                <Col span="4">
+                <Col span="5">
                 <RadioGroup v-model="showType" type="button">
                     <Radio label="Config"></Radio>
                     <Radio label="ResponseResult"></Radio>
