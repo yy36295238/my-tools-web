@@ -246,7 +246,7 @@ export default {
 function mysqlSql() {
     var str = "";
     str += "CREATE TABLE `customer` (\n";
-    str += "    `id` bigint(20) NOT NULL COMMENT '主键',\n";
+    str += "    ``id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',\n";
     str += "    `name` varchar(255) NOT NULL COMMENT '名称',\n";
     str += "    `amount` double DEFAULT NULL COMMENT '金额',\n";
     str += "    `text` text COMMENT '文本',\n";
@@ -256,7 +256,7 @@ function mysqlSql() {
     str += "    UNIQUE KEY `unq_name` (`name`) USING BTREE COMMENT '名称唯一索引',\n";
     str += "    KEY `idx_status` (`status`) USING BTREE COMMENT '状态索引',\n";
     str += "    KEY `idx_name_createTime` (`name`,`create_time`) USING BTREE COMMENT '名称_时间'\n";
-    str += ") ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='客户表';";
+    str += ") ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户表';";
     return {
         val: str
     };
